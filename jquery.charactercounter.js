@@ -11,6 +11,9 @@
  * @author Twitter: darrentaytay
  * @author Website: http://darrenonthe.net
  *
+ * Block property added by Sergio Cerrutti
+ * https://github.com/sergiocerrutti/jquery-character-counter
+ *
  */
 (function($) {
 
@@ -20,7 +23,7 @@
             exceeded: false,
             counterSelector: false,
             limit: 150,
-            block: true,
+            block: false,
             renderTotal: false,
             counterWrapper: 'span',
             counterCssClass: 'counter',
@@ -90,32 +93,33 @@
             var characterCount = $(element).val().length;
             var counter = options.counterSelector ? $(options.counterSelector) : $(element).nextAll("." + options.counterCssClass).first();
             var remaining = options.limit - characterCount;
-            var conditionBlock = options.block && remaining === 0;
             var condition = remaining < 0;
-
-            if ( options.increaseCounting )
-            {
-                remaining = characterCount;
-                condition = remaining > options.limit;
-            }
+            var conditionBlock = options.block && condition;
 
             if ( conditionBlock )
             {
-                return;
-            }
+                remaining = 0;
+                $(element).val($(element).val().substr(0, options.limit));
+            } else {
+                if ( options.increaseCounting )
+                {
+                    remaining = characterCount;
+                    condition = remaining > options.limit;
+                }
 
-            if ( condition )
-            {
-                counter.addClass(options.counterExceededCssClass);
-                options.exceeded = true;
-                options.onExceed(characterCount);
-            }
-            else
-            {
-                if ( options.exceeded ) {
-                    counter.removeClass(options.counterExceededCssClass);
-                    options.onDeceed(characterCount);
-                    options.exceeded = false;
+                if ( condition )
+                {
+                    counter.addClass(options.counterExceededCssClass);
+                    options.exceeded = true;
+                    options.onExceed(characterCount);
+                }
+                else
+                {
+                    if ( options.exceeded ) {
+                        counter.removeClass(options.counterExceededCssClass);
+                        options.onDeceed(characterCount);
+                        options.exceeded = false;
+                    }
                 }
             }
 
