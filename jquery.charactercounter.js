@@ -20,6 +20,7 @@
             exceeded: false,
             counterSelector: false,
             limit: 150,
+            block: true,
             renderTotal: false,
             counterWrapper: 'span',
             counterCssClass: 'counter',
@@ -89,12 +90,18 @@
             var characterCount = $(element).val().length;
             var counter = options.counterSelector ? $(options.counterSelector) : $(element).nextAll("." + options.counterCssClass).first();
             var remaining = options.limit - characterCount;
+            var conditionBlock = options.block && remaining === 0;
             var condition = remaining < 0;
 
             if ( options.increaseCounting )
             {
                 remaining = characterCount;
                 condition = remaining > options.limit;
+            }
+
+            if ( conditionBlock )
+            {
+                return;
             }
 
             if ( condition )
